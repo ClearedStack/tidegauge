@@ -1,0 +1,30 @@
+{
+  "slug": "tidegauge",
+  "name": "Tidegauge",
+  "formerly": "cs-09-monitor",
+  "earlierNames": [
+    "Dogwatch"
+  ],
+  "kind": "worker",
+  "stage": 9,
+  "namespace": "cs-workers",
+  "responsibility": "Watches official sources, live tools and linked tools for change, and reopens whatever is affected.",
+  "interfaces": [
+    "Leases scheduled checks from Muster",
+    "Fetches the Federal Register, the eCFR and NIST's publications, and checks linked and live tools"
+  ],
+  "repository": "tidegauge",
+  "image": "tidegauge",
+  "dependsOn": [
+    "muster"
+  ],
+  "memory": "30 MiB",
+  "version": "v0.1.0-draft",
+  "subTools": [
+    "federal-register",
+    "ecfr",
+    "nist-csrc",
+    "linked-tool-watch",
+    "live-catalog"
+  ]
+}
