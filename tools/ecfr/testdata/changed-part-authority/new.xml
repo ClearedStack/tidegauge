@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<DIV5 N="901" TYPE="PART" hierarchy_metadata="{&quot;path&quot;:&quot;/on/_SUBSTITUTE_DATE_/title-99/part-901&quot;}">
+<HEAD>PART 901—EXAMPLE WIDGET PURCHASING RULES (MADE-UP TEST DATA)</HEAD>
+<AUTH>
+<HED>Authority:</HED><PSPACE>Invented for testing and revised. Title 99 does not exist.</PSPACE></AUTH>
+<DIV6 N="901.1" TYPE="SUBPART">
+<HEAD>Subpart 901.1—Thresholds</HEAD>
+<DIV8 N="901.101" TYPE="SECTION">
+<HEAD>901.101 Scope.</HEAD>
+<P>This subpart is invented test data. It sets made-up limits for buying <I>widgets</I>.</P>
+</DIV8>
+<DIV8 N="901.102" TYPE="SECTION">
+<HEAD>901.102 Widget purchase threshold.</HEAD>
+<P>(a) The widget purchase threshold is $12,500.</P>
+<P>(b) A purchase above $2.5 million needs a second signature.</P>
+<P>(c) This section takes effect on March 3, 2031.</P>
+<CITA TYPE="N">[1 FR 100, Jan. 5, 2030]</CITA>
+</DIV8>
+</DIV6>
+<DIV6 N="901.2" TYPE="SUBPART">
+<HEAD>Subpart 901.2—Records</HEAD>
+<DIV8 N="901.201" TYPE="SECTION">
+<HEAD>901.201 Keeping records.</HEAD>
+<P>(a) Keep each widget record for three years.</P>
+<P>(b) Records may be kept on paper.</P>
+</DIV8>
+</DIV6>
+</DIV5>

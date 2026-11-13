@@ -1,0 +1,28 @@
+{
+  "tool": "ecfr",
+  "status": "changed",
+  "method": "xml-diff",
+  "changes": [
+    {
+      "where": [
+        "PART 901",
+        "SUBPART 901.1",
+        "SECTION 901.102"
+      ],
+      "kind": "modified",
+      "fields": [
+        "text"
+      ],
+      "paragraphs": [
+        {
+          "op": "removed",
+          "position": 2,
+          "marker": "(b)"
+        }
+      ],
+      "amounts_removed": [
+        "$2.5 million"
+      ]
+    }
+  ]
+}

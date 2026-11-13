@@ -1,0 +1,9 @@
+# Sub-tools that are built. One entry per folder under tools/.
+# Names come from component.json ("subTools"). A sub-tool is added here when
+# it is complete: matching rule, logic and fixtures.
+tools:
+  - name: ecfr
+    folder: tools/ecfr
+    match: tools/ecfr/match.go
+    logic: tools/ecfr/ecfr.go
+    fixtures: tools/ecfr/testdata
