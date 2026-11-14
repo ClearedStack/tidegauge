@@ -1,0 +1,8 @@
+{
+  "tool": "nist-csrc",
+  "status": "failed",
+  "error": {
+    "code": "E_PARSE",
+    "message": "the HTML source is malformed"
+  }
+}

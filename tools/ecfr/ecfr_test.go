@@ -13,7 +13,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/clearedstack/tidegauge/internal/watch"
+	"github.com/ClearedStack/tidegauge/internal/watch"
 )
 
 var update = flag.Bool("update", false, "rewrite want.json in every fixture from the current behaviour")

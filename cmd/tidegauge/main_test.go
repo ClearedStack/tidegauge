@@ -41,15 +41,59 @@ func TestRun(t *testing.T) {
 	}
 }
 
+func TestRunAllSubtoolsAndWorkStandin(t *testing.T) {
+	subtoolCases := []struct {
+		tool    string
+		fixture string
+		ext     string
+		extra   []string
+	}{
+		{"federal-register", "changed-json-new-final-rule", ".json", nil},
+		{"nist-csrc", "changed-atom-revision", ".xml", nil},
+		{"linked-tool-watch", "changed-paywall-dom", ".html", []string{"-origin", "https://synth-calc.example"}},
+		{"live-catalog", "changed-json-rule-version-drift", ".json", nil},
+	}
+	for _, tc := range subtoolCases {
+		t.Run(tc.tool, func(t *testing.T) {
+			dir := filepath.Join("..", "..", "tools", tc.tool, "testdata", tc.fixture)
+			args := append([]string{
+				tc.tool,
+				"-old", filepath.Join(dir, "old"+tc.ext),
+				"-new", filepath.Join(dir, "new"+tc.ext),
+			}, tc.extra...)
+			var stdout, stderr bytes.Buffer
+			if got := run(args, &stdout, &stderr); got != 0 {
+				t.Fatalf("exit %d, want 0 (stderr: %s)", got, stderr.String())
+			}
+			want, err := os.ReadFile(filepath.Join(dir, "want.json"))
+			if err != nil {
+				t.Fatal(err)
+			}
+			if !bytes.Equal(stdout.Bytes(), want) {
+				t.Errorf("output differs from want.json\n%s", stdout.String())
+			}
+		})
+	}
+
+	// Verify standalone worker mode (-standin -once) runs cleanly with local spool.
+	var stdout, stderr bytes.Buffer
+	code := run([]string{"work", "-standin", "-once", "-spool", t.TempDir()}, &stdout, &stderr)
+	if code != 0 {
+		t.Fatalf("tidegauge work -standin -once exited %d: %s", code, stderr.String())
+	}
+}
+
 func TestRunUsage(t *testing.T) {
 	missing := filepath.Join(t.TempDir(), "host-zz9-missing.xml")
 	for _, args := range [][]string{
 		nil,
+		{"unknown-subcommand"},
 		{"federal-register"},
 		{"ecfr"},
 		{"ecfr", "-old", "a.xml"},
 		{"ecfr", "-nope"},
 		{"ecfr", "-old", missing, "-new", missing},
+		{"work", "-poll", "not-a-duration"},
 	} {
 		var stdout, stderr bytes.Buffer
 		if got := run(args, &stdout, &stderr); got != 2 {

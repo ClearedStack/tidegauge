@@ -11,7 +11,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/clearedstack/tidegauge/internal/watch"
+	"github.com/ClearedStack/tidegauge/internal/watch"
 )
 
 // maxBlockBytes caps the text of one paragraph-level element. The document
@@ -22,10 +22,11 @@ var maxBlockBytes = 1 << 20
 // unit is one division of the document (a part, a subpart, a section ...)
 // reduced to what the comparison needs. The source text itself is not kept.
 type unit struct {
-	key  string   // labels from the root down, joined by keySep
-	seq  int      // position in the document, counting divisions from 0
-	head [32]byte // digest of the heading
-	body [32]byte // digest of the division's own text, excluding sub-divisions
+	key      string   // labels from the root down, joined by keySep
+	seq      int      // position in the document, counting divisions from 0
+	head     [32]byte // digest of the heading
+	body     [32]byte // digest of the division's own text, excluding sub-divisions
+	reserved bool     // heading marks this division [Reserved]
 
 	// Filled only for divisions the caller asked for in detail.
 	detail  bool
@@ -178,6 +179,7 @@ func parse(r io.Reader, wantDetail func(key string) bool, emit func(*unit)) *wat
 				if blockHead {
 					top.headSeen = true
 					top.u.head = sha256.Sum256([]byte(s))
+					top.u.reserved = strings.Contains(strings.ToLower(s), "[reserved]")
 					if top.u.detail {
 						top.u.amounts = append(top.u.amounts, amounts(s)...)
 						top.u.dates = append(top.u.dates, dates(s)...)

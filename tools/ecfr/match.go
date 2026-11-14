@@ -2,8 +2,22 @@ package ecfr
 
 import (
 	"encoding/xml"
+	"net/url"
 	"strings"
 )
+
+// MatchURL reports whether u identifies an eCFR regulatory target.
+func MatchURL(raw string) bool {
+	u, err := url.Parse(raw)
+	if err != nil || u.Host == "" {
+		return false
+	}
+	host := strings.ToLower(u.Hostname())
+	if host == "ecfr.gov" || strings.HasSuffix(host, ".ecfr.gov") {
+		return true
+	}
+	return strings.HasPrefix(u.Path, "/ecfr/")
+}
 
 // The matching rule: what this sub-tool accepts as an eCFR document.
 //

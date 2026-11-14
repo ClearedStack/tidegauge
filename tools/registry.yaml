@@ -2,8 +2,28 @@
 # Names come from component.json ("subTools"). A sub-tool is added here when
 # it is complete: matching rule, logic and fixtures.
 tools:
+  - name: federal-register
+    folder: tools/federal-register
+    match: tools/federal-register/match.go
+    logic: tools/federal-register/federal_register.go
+    fixtures: tools/federal-register/testdata
   - name: ecfr
     folder: tools/ecfr
     match: tools/ecfr/match.go
     logic: tools/ecfr/ecfr.go
     fixtures: tools/ecfr/testdata
+  - name: nist-csrc
+    folder: tools/nist-csrc
+    match: tools/nist-csrc/match.go
+    logic: tools/nist-csrc/nist_csrc.go
+    fixtures: tools/nist-csrc/testdata
+  - name: linked-tool-watch
+    folder: tools/linked-tool-watch
+    match: tools/linked-tool-watch/match.go
+    logic: tools/linked-tool-watch/linked_tool_watch.go
+    fixtures: tools/linked-tool-watch/testdata
+  - name: live-catalog
+    folder: tools/live-catalog
+    match: tools/live-catalog/match.go
+    logic: tools/live-catalog/live_catalog.go
+    fixtures: tools/live-catalog/testdata

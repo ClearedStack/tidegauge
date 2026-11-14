@@ -8,11 +8,13 @@
 package ecfr
 
 import (
+	"crypto/sha256"
+	"encoding/hex"
 	"io"
 	"sort"
 	"strings"
 
-	"github.com/clearedstack/tidegauge/internal/watch"
+	"github.com/ClearedStack/tidegauge/internal/watch"
 )
 
 // Name is this sub-tool's name in component.json and tools/registry.yaml.
@@ -216,4 +218,57 @@ func etagOpaque(s string) (string, bool) {
 		return "", false
 	}
 	return s, true
+}
+
+// Summary is a compact, source-text-free fingerprint of one eCFR document used
+// by the continuous worker to persist baselines inside Muster's 64 KiB result
+// limit.
+type Summary struct {
+	Root     string `json:"root"`
+	DivCount int    `json:"div_count"`
+	Digest   string `json:"digest"`
+	Reserved bool   `json:"reserved,omitempty"`
+}
+
+// Inspect streams one eCFR XML document and returns its canonical Summary,
+// ignoring formatting and division order just as Compare does.
+func Inspect(r io.Reader) (Summary, *watch.Error) {
+	if r == nil {
+		return Summary{}, unreadable()
+	}
+	type item struct {
+		key  string
+		head [32]byte
+		body [32]byte
+	}
+	var items []item
+	var rootKey string
+	var rootReserved bool
+	var rootBody [32]byte
+	emptySum := sha256.Sum256(nil)
+	if werr := parse(r, nil, func(u *unit) {
+		items = append(items, item{key: u.key, head: u.head, body: u.body})
+		if !strings.Contains(u.key, keySep) {
+			rootKey = u.key
+			rootReserved = u.reserved
+			rootBody = u.body
+		}
+	}); werr != nil {
+		return Summary{}, werr
+	}
+	sort.Slice(items, func(i, j int) bool { return items[i].key < items[j].key })
+	h := sha256.New()
+	for _, it := range items {
+		h.Write([]byte(it.key))
+		h.Write([]byte{0})
+		h.Write(it.head[:])
+		h.Write(it.body[:])
+	}
+	reserved := len(items) == 1 && rootReserved && rootBody == emptySum
+	return Summary{
+		Root:     rootKey,
+		DivCount: len(items),
+		Digest:   hex.EncodeToString(h.Sum(nil)),
+		Reserved: reserved,
+	}, nil
 }

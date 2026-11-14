@@ -1,0 +1,22 @@
+{
+  "tool": "live-catalog",
+  "status": "changed",
+  "method": "json-diff",
+  "http_status": 200,
+  "changes": [
+    {
+      "slug": "synth-legacy-clause-tool",
+      "kind": "modified",
+      "healthy": false,
+      "old_rule_version": "99-CFR-952@2029-10-01",
+      "new_rule_version": "99-CFR-952@2031-05-01",
+      "rule_status": "repealed",
+      "repealed": true,
+      "signals": [
+        "health_failed",
+        "rule_version_drift",
+        "repealed"
+      ]
+    }
+  ]
+}

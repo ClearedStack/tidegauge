@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Synthetic CSRC Publications</title>
+  <entry>
+    <id>urn:synth:nist:sp-999-171</id>
+    <title>NIST SP 999-171 Rev. 2: Protecting Synthetic Controlled Information</title>
+    <updated>2031-02-10T00:00:00Z</updated>
+    <category term="final"/>
+    <summary>SYNTHETIC_SENTINEL revision 2 text.</summary>
+  </entry>
+</feed>
