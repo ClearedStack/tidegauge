@@ -1,0 +1,19 @@
+{
+  "tool": "live-catalog",
+  "status": "changed",
+  "method": "dom-diff",
+  "http_status": 200,
+  "changes": [
+    {
+      "slug": "synth-cmmc-scoping",
+      "kind": "modified",
+      "healthy": true,
+      "old_rule_version": "SP-999-171r2",
+      "new_rule_version": "SP-999-171r3",
+      "rule_status": "active",
+      "signals": [
+        "rule_version_drift"
+      ]
+    }
+  ]
+}

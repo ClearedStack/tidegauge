@@ -1,0 +1,73 @@
+# Default-deny policy for cs-workers: no pod may send or receive traffic unless
+# an explicit NetworkPolicy allows it.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny
+  namespace: cs-workers
+  labels:
+    app.kubernetes.io/part-of: clearedstack
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+    - Egress
+---
+# Tidegauge accepts no inbound connections and may open outbound connections
+# only to:
+#   1. CoreDNS in kube-system (UDP/TCP 53),
+#   2. Muster in clearedstack (TCP 8080 and 80),
+#   3. Public HTTPS servers (TCP 443), excluding RFC1918, loopback, link-local
+#      and CGNAT/Tailscale ranges so Logbook, Plainforge and Lazarette remain
+#      unreachable.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: tidegauge-egress
+  namespace: cs-workers
+  labels:
+    app.kubernetes.io/name: tidegauge
+    app.kubernetes.io/part-of: clearedstack
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: tidegauge
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress: []
+  egress:
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: kube-system
+      ports:
+        - protocol: UDP
+          port: 53
+        - protocol: TCP
+          port: 53
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: clearedstack
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/name: muster
+      ports:
+        - protocol: TCP
+          port: 8080
+        - protocol: TCP
+          port: 80
+    - to:
+        - ipBlock:
+            cidr: 0.0.0.0/0
+            except:
+              - 10.0.0.0/8
+              - 172.16.0.0/12
+              - 192.168.0.0/16
+              - 100.64.0.0/10
+              - 127.0.0.0/8
+              - 169.254.0.0/16
+      ports:
+        - protocol: TCP
+          port: 443

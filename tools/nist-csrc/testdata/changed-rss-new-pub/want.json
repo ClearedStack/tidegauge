@@ -1,0 +1,17 @@
+{
+  "tool": "nist-csrc",
+  "status": "changed",
+  "method": "feed-diff",
+  "changes": [
+    {
+      "pub_id": "SP 999-172",
+      "kind": "added",
+      "series": "SP",
+      "revision": "r1",
+      "status": "draft",
+      "dates_added": [
+        "2031-08-20"
+      ]
+    }
+  ]
+}

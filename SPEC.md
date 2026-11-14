@@ -10,7 +10,7 @@ The same text is published at [clearedstack.com/platform/tidegauge/](https://cle
 
 Tidegauge is the continuous monitoring worker in the `cs-workers` namespace (`ownerRepo: Tidegauge`, version `v0.1.0-draft`). Replacing the original Stage 10 (Revisit), it watches federal regulatory feeds, `live` ClearedStack tools, external `linked` tools, and `parked` blockers for drift.
 
-Tidegauge is a 100% deterministic Go service with zero AI at runtime. Rather than scraping pages blindly or patching tools directly, it uses lightweight HTTP ETags, structured XML/API feeds, and deterministic DOM diffs—and reopens affected `PA-XXXX` items in Muster so the main pipeline handles updates cleanly.
+Tidegauge is a 100% deterministic Go service with zero AI at runtime. Rather than scraping pages blindly or patching tools directly, it uses lightweight HTTP ETags, structured XML/API feeds, and deterministic DOM diffs, and reopens affected `PA-XXXX` items in Muster so the main pipeline handles updates cleanly.
 
 ## Runtime & Resource Budget
 

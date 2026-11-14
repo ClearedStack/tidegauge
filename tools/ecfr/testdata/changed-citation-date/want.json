@@ -1,0 +1,31 @@
+{
+  "tool": "ecfr",
+  "status": "changed",
+  "method": "xml-diff",
+  "changes": [
+    {
+      "where": [
+        "PART 901",
+        "SUBPART 901.1",
+        "SECTION 901.102"
+      ],
+      "kind": "modified",
+      "fields": [
+        "text"
+      ],
+      "paragraphs": [
+        {
+          "op": "removed",
+          "position": 4
+        },
+        {
+          "op": "added",
+          "position": 4
+        }
+      ],
+      "dates_added": [
+        "2031-09-09"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "slug": "synth-legacy-clause-tool",
+  "status": "live",
+  "healthy": true,
+  "rule_version": "99-CFR-952@2029-10-01",
+  "rule_status": "active",
+  "citations": ["99 CFR 952.204-99"]
+}

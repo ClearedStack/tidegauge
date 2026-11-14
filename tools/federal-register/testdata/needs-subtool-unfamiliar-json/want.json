@@ -1,0 +1,8 @@
+{
+  "tool": "federal-register",
+  "status": "needs_subtool",
+  "error": {
+    "code": "E_NEEDS_SUBTOOL",
+    "message": "the JSON object is not a Federal Register response"
+  }
+}

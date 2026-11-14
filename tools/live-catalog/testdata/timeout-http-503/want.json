@@ -1,0 +1,8 @@
+{
+  "tool": "live-catalog",
+  "status": "failed",
+  "error": {
+    "code": "E_TIMEOUT",
+    "message": "the live tool timed out or is temporarily unavailable"
+  }
+}

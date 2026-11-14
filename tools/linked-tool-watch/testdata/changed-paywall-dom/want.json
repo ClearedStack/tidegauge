@@ -1,0 +1,10 @@
+{
+  "tool": "linked-tool-watch",
+  "status": "changed",
+  "method": "dom-diff",
+  "http_status": 200,
+  "signals": [
+    "paywall"
+  ],
+  "paywalled": true
+}

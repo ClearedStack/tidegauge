@@ -1,0 +1,21 @@
+{
+  "tool": "ecfr",
+  "status": "changed",
+  "method": "xml-diff",
+  "changes": [
+    {
+      "where": [
+        "PART 901",
+        "SUBPART 901.2",
+        "SECTION 901.202"
+      ],
+      "kind": "added",
+      "amounts_added": [
+        "$0.25"
+      ],
+      "dates_added": [
+        "2032-07-04"
+      ]
+    }
+  ]
+}

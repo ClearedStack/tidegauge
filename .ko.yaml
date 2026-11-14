@@ -1,0 +1,13 @@
+# ko build configuration for Tidegauge.
+# Base image is gcr.io/distroless/static-debian12:nonroot pinned by manifest-list digest.
+defaultBaseImage: gcr.io/distroless/static-debian12:nonroot@sha256:afa5c872c891853ca7fcf1f12c3edb23f7eeef36189728842dd51042ff57f7ab
+builds:
+  - id: tidegauge
+    dir: .
+    main: ./cmd/tidegauge
+    env:
+      - CGO_ENABLED=0
+    flags:
+      - -trimpath
+    ldflags:
+      - -s -w

@@ -1,0 +1,27 @@
+{
+  "results": [
+    {
+      "document_number": "2031-90101",
+      "type": "Rule",
+      "action": "Final rule.",
+      "title": "Sample Acquisition Rules: Threshold Adjustment",
+      "abstract": "Adjusts made-up purchase limit to $15,000 effective April 15, 2031.",
+      "publication_date": "2031-02-01",
+      "effective_on": "2031-04-15",
+      "regulation_id_number": "9900-AA01",
+      "cfr_references": [
+        {
+          "title": 99,
+          "part": 901
+        },
+        {
+          "title": 99,
+          "part": 952
+        }
+      ],
+      "docket_ids": [
+        "SAMPLE-2031-0001"
+      ]
+    }
+  ]
+}

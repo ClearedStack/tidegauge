@@ -1,0 +1,33 @@
+{
+  "tool": "federal-register",
+  "status": "changed",
+  "method": "xml-diff",
+  "changes": [
+    {
+      "doc_number": "2031-90200",
+      "kind": "modified",
+      "doc_type": "rule",
+      "action_kind": "interim_rule",
+      "cfr": [
+        "99 CFR 901",
+        "99 CFR 919"
+      ],
+      "rin": [
+        "9900-AA02"
+      ],
+      "effective_on": "2031-04-01",
+      "amounts_removed": [
+        "$250,000"
+      ],
+      "amounts_added": [
+        "$300,000"
+      ],
+      "dates_removed": [
+        "2031-03-10"
+      ],
+      "dates_added": [
+        "2031-04-01"
+      ]
+    }
+  ]
+}

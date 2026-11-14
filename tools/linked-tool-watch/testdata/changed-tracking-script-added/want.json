@@ -1,0 +1,11 @@
+{
+  "tool": "linked-tool-watch",
+  "status": "changed",
+  "method": "dom-diff",
+  "http_status": 200,
+  "signals": [
+    "tracking_script"
+  ],
+  "trackers_added": 1,
+  "third_party_scripts_added": 1
+}
