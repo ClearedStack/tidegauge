@@ -1,0 +1,27 @@
+{
+  "results": [
+    {
+      "document_number": "2031-90101",
+      "type": "Rule",
+      "action": "Final rule; repeal of subpart.",
+      "title": "Sample Acquisition Rules: Threshold Adjustment",
+      "abstract": "Removes made-up clause in 99 CFR 952 effective May 1, 2031.",
+      "publication_date": "2031-02-01",
+      "effective_on": "2031-05-01",
+      "regulation_id_number": "9900-AA01",
+      "cfr_references": [
+        {
+          "title": 99,
+          "part": 901
+        },
+        {
+          "title": 99,
+          "part": 952
+        }
+      ],
+      "docket_ids": [
+        "SAMPLE-2031-0001"
+      ]
+    }
+  ]
+}

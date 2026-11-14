@@ -1,0 +1,95 @@
+{
+  "tool": "ecfr",
+  "status": "changed",
+  "method": "xml-diff",
+  "changes": [
+    {
+      "where": [
+        "PART 901",
+        "SUBPART 901.1",
+        "SECTION 901.101"
+      ],
+      "kind": "modified",
+      "fields": [
+        "heading"
+      ]
+    },
+    {
+      "where": [
+        "PART 901",
+        "SUBPART 901.1",
+        "SECTION 901.102"
+      ],
+      "kind": "modified",
+      "fields": [
+        "text"
+      ],
+      "paragraphs": [
+        {
+          "op": "removed",
+          "position": 1,
+          "marker": "(a)"
+        },
+        {
+          "op": "added",
+          "position": 1,
+          "marker": "(a)"
+        },
+        {
+          "op": "removed",
+          "position": 3,
+          "marker": "(c)"
+        },
+        {
+          "op": "added",
+          "position": 3,
+          "marker": "(c)"
+        }
+      ],
+      "amounts_removed": [
+        "$12,500"
+      ],
+      "amounts_added": [
+        "$15,000"
+      ],
+      "dates_removed": [
+        "2031-03-03"
+      ],
+      "dates_added": [
+        "2031-10-01"
+      ]
+    },
+    {
+      "where": [
+        "PART 901",
+        "SUBPART 901.2",
+        "SECTION 901.201"
+      ],
+      "kind": "modified",
+      "fields": [
+        "text"
+      ],
+      "paragraphs": [
+        {
+          "op": "removed",
+          "position": 2,
+          "marker": "(b)"
+        }
+      ]
+    },
+    {
+      "where": [
+        "PART 901",
+        "SUBPART 901.2",
+        "SECTION 901.202"
+      ],
+      "kind": "added",
+      "amounts_added": [
+        "$0.25"
+      ],
+      "dates_added": [
+        "2032-07-04"
+      ]
+    }
+  ]
+}

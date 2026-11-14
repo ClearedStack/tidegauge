@@ -1,0 +1,9 @@
+{
+  "tool": "linked-tool-watch",
+  "status": "changed",
+  "method": "http-status",
+  "http_status": 404,
+  "signals": [
+    "offline"
+  ]
+}

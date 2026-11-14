@@ -1,0 +1,33 @@
+{
+  "tool": "federal-register",
+  "status": "changed",
+  "method": "json-diff",
+  "changes": [
+    {
+      "doc_number": "2031-90101",
+      "kind": "modified",
+      "doc_type": "rule",
+      "action_kind": "repeal",
+      "cfr": [
+        "99 CFR 901",
+        "99 CFR 952"
+      ],
+      "rin": [
+        "9900-AA01"
+      ],
+      "effective_on": "2031-05-01",
+      "repealed": true,
+      "amounts_removed": [
+        "$12,500"
+      ],
+      "dates_removed": [
+        "2031-03-03",
+        "2031-03-03"
+      ],
+      "dates_added": [
+        "2031-05-01",
+        "2031-05-01"
+      ]
+    }
+  ]
+}

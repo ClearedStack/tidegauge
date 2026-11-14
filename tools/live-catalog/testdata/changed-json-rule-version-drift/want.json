@@ -1,0 +1,22 @@
+{
+  "tool": "live-catalog",
+  "status": "changed",
+  "method": "json-diff",
+  "http_status": 200,
+  "changes": [
+    {
+      "slug": "synth-threshold-check",
+      "kind": "modified",
+      "healthy": true,
+      "old_rule_version": "99-CFR-901@2031-01-15",
+      "new_rule_version": "99-CFR-901@2031-06-01",
+      "rule_status": "active",
+      "signals": [
+        "rule_version_drift"
+      ],
+      "citations_added": [
+        "99 CFR 901.104"
+      ]
+    }
+  ]
+}

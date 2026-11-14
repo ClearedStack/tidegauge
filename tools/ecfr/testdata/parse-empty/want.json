@@ -1,0 +1,8 @@
+{
+  "tool": "ecfr",
+  "status": "failed",
+  "error": {
+    "code": "E_PARSE",
+    "message": "the source is empty or has no root element"
+  }
+}

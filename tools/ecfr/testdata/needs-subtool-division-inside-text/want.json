@@ -1,0 +1,8 @@
+{
+  "tool": "ecfr",
+  "status": "needs_subtool",
+  "error": {
+    "code": "E_NEEDS_SUBTOOL",
+    "message": "a division sits inside a text element"
+  }
+}

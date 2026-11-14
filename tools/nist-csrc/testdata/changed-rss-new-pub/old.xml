@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>Synthetic CSRC Feed</title>
+    <item>
+      <guid>sp-999-171</guid>
+      <title>SP 999-171 Rev. 3</title>
+      <pubDate>2031-06-15</pubDate>
+      <category>final</category>
+      <description>SYNTHETIC_SENTINEL base standard.</description>
+    </item>
+  </channel>
+</rss>

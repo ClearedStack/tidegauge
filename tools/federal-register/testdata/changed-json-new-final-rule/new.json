@@ -1,0 +1,45 @@
+{
+  "results": [
+    {
+      "document_number": "2031-90101",
+      "type": "Rule",
+      "action": "Final rule.",
+      "title": "Sample Acquisition Rules: Threshold Adjustment",
+      "abstract": "Adjusts made-up purchase limit to $12,500 effective March 3, 2031.",
+      "publication_date": "2031-02-01",
+      "effective_on": "2031-03-03",
+      "regulation_id_number": "9900-AA01",
+      "cfr_references": [
+        {
+          "title": 99,
+          "part": 901
+        },
+        {
+          "title": 99,
+          "part": 952
+        }
+      ],
+      "docket_ids": [
+        "SAMPLE-2031-0001"
+      ]
+    },
+    {
+      "document_number": "2031-90450",
+      "type": "Rule",
+      "action": "Final rule.",
+      "title": "Sample Small-Business Set-Aside Update",
+      "abstract": "Sets made-up small-business threshold at $350,000 effective June 1, 2031.",
+      "publication_date": "2031-04-15",
+      "effective_on": "2031-06-01",
+      "regulation_id_numbers": [
+        "9900-AB12"
+      ],
+      "cfr_references": [
+        {
+          "title": 99,
+          "part": 919
+        }
+      ]
+    }
+  ]
+}

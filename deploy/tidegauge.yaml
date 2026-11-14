@@ -1,0 +1,96 @@
+# Tidegauge worker in the cs-workers namespace.
+#
+# Built with ko (.ko.yaml) and pushed to Lazarette by Keelworks, which replaces
+# the placeholder sha256 digest below with the signed image digest at release
+# time. Tidegauge carries no Secret: it authenticates to Muster solely with its
+# projected Kubernetes ServiceAccount token.
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: tidegauge
+  namespace: cs-workers
+  labels:
+    app.kubernetes.io/name: tidegauge
+    app.kubernetes.io/part-of: clearedstack
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tidegauge
+  namespace: cs-workers
+  labels:
+    app.kubernetes.io/name: tidegauge
+    app.kubernetes.io/part-of: clearedstack
+    app.kubernetes.io/version: v0.1.0-draft
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: tidegauge
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: tidegauge
+        app.kubernetes.io/part-of: clearedstack
+    spec:
+      serviceAccountName: tidegauge
+      automountServiceAccountToken: true
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: kubernetes.io/arch
+                    operator: In
+                    values: ["arm64"]
+                  - key: kubernetes.io/hostname
+                    operator: NotIn
+                    values: ["cm3588-plus"]
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65532
+        runAsGroup: 65532
+        fsGroup: 65532
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: tidegauge
+          # Pinned by digest; Keelworks substitutes the built Lazarette digest before apply.
+          image: lazarette.clearedstack.svc.cluster.local:5000/tidegauge@sha256:0000000000000000000000000000000000000000000000000000000000000000
+          imagePullPolicy: IfNotPresent
+          args:
+            - work
+          env:
+            - name: CONTRACT_VERSION
+              value: v1
+            - name: MUSTER_URL
+              value: http://muster.clearedstack.svc.cluster.local:8080
+            - name: TIDEGAUGE_SPOOL_DIR
+              value: /var/spool/cs
+            - name: GOMEMLIMIT
+              value: 24MiB
+          resources:
+            requests:
+              cpu: 10m
+              memory: 16Mi
+            limits:
+              cpu: 200m
+              memory: 30Mi
+          securityContext:
+            privileged: false
+            runAsNonRoot: true
+            runAsUser: 65532
+            runAsGroup: 65532
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: ["ALL"]
+          volumeMounts:
+            - name: spool
+              mountPath: /var/spool/cs
+      volumes:
+        - name: spool
+          emptyDir:
+            sizeLimit: 32Mi

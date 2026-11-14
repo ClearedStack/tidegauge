@@ -1,0 +1,11 @@
+{
+  "entries": [
+    {
+      "slug": "synth-threshold-check",
+      "status": "live",
+      "healthy": true,
+      "rule_version": "99-CFR-901@2031-01-15",
+      "citations": ["99 CFR 901.102"]
+    }
+  ]
+}

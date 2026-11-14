@@ -1,0 +1,21 @@
+{
+  "tool": "nist-csrc",
+  "status": "changed",
+  "method": "dom-diff",
+  "changes": [
+    {
+      "pub_id": "SP 999-171",
+      "kind": "modified",
+      "series": "SP",
+      "revision": "r2",
+      "status": "superseded",
+      "superseded_by": [
+        "SP 999-171r3"
+      ],
+      "repealed": true,
+      "dates_added": [
+        "2031-09-01"
+      ]
+    }
+  ]
+}

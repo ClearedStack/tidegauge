@@ -1,0 +1,6 @@
+{
+  "tool": "live-catalog",
+  "status": "unchanged",
+  "method": "json-diff",
+  "http_status": 200
+}
