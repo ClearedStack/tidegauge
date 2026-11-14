@@ -45,7 +45,7 @@ var contractRoutes = []routeSpec{
 	{worker: "assay", kind: "item", from: "observed", to: "scored", next: "countersign"},
 	{worker: "assay", kind: "item", from: "observed", to: "screened_out", next: "countersign"},
 	{worker: "countersign", kind: "item", from: "scored", to: "approved", next: "waybill"},
-	{worker: "countersign", kind: "item", from: "scored", to: "parked"},
+	{worker: "countersign", kind: "item", from: "scored", to: "parked", next: "tidegauge", lane: "backfill", delay: 168 * time.Hour},
 	{worker: "countersign", kind: "item", from: "scored", to: "linked", next: "chartroom"},
 	{worker: "countersign", kind: "item", from: "scored", to: "merged", next: "chartroom"},
 	{worker: "countersign", kind: "item", from: "scored", to: "rejected"},
@@ -53,42 +53,39 @@ var contractRoutes = []routeSpec{
 	{worker: "waybill", kind: "item", from: "approved", to: "approved", next: "moldloft"},
 	{worker: "moldloft", kind: "item", from: "approved", to: "building", next: "shakedown"},
 	{worker: "shakedown", kind: "item", from: "building", to: "building", next: "chartroom"},
-	{worker: "shakedown", kind: "item", from: "building", to: "parked"},
+	{worker: "shakedown", kind: "item", from: "building", to: "parked", next: "tidegauge", lane: "backfill", delay: 168 * time.Hour},
 	{worker: "chartroom", kind: "item", from: "building", to: "live", next: "tidegauge", lane: "backfill", delay: 168 * time.Hour},
-	{worker: "chartroom", kind: "item", from: "linked", to: "linked"},
+	{worker: "chartroom", kind: "item", from: "linked", to: "linked", next: "tidegauge", lane: "backfill", delay: 168 * time.Hour},
 	{worker: "chartroom", kind: "item", from: "merged", to: "merged"},
 	{worker: "chartroom", kind: "item", from: "retired", to: "retired"},
 	{worker: "tidegauge", kind: "item", from: "live", to: "live", next: "tidegauge", lane: "backfill", delay: 168 * time.Hour},
 	{worker: "tidegauge", kind: "item", from: "live", to: "retired", next: "chartroom", lane: "urgent"},
 	{worker: "tidegauge", kind: "item", from: "live", to: "building", next: "waybill", lane: "urgent"},
+	{worker: "tidegauge", kind: "item", from: "linked", to: "linked", next: "tidegauge", lane: "backfill", delay: 168 * time.Hour},
+	{worker: "tidegauge", kind: "item", from: "linked", to: "observed", next: "assay", lane: "urgent"},
+	{worker: "tidegauge", kind: "item", from: "parked", to: "parked", next: "tidegauge", lane: "backfill", delay: 168 * time.Hour},
+	{worker: "tidegauge", kind: "item", from: "parked", to: "observed", next: "assay", lane: "urgent"},
 	{worker: "waybill", kind: "item", from: "building", to: "building", next: "moldloft"},
 	{worker: "moldloft", kind: "item", from: "building", to: "building", next: "shakedown"},
 }
 
-// specExtendedRoutes adds the linked/parked revisit routes described in
-// Tidegauge's SPEC.md for opt-in worker integration tests while keeping
-// strict CONTRACT.md v1 behavior as the default.
-var specExtendedRoutes = []routeSpec{
-	{worker: "tidegauge", kind: "item", from: "linked", to: "linked", next: "tidegauge", lane: "backfill", delay: 168 * time.Hour},
-	{worker: "tidegauge", kind: "item", from: "linked", to: "observed", next: "assay", lane: "normal"},
-	{worker: "tidegauge", kind: "item", from: "parked", to: "parked", next: "tidegauge", lane: "backfill", delay: 168 * time.Hour},
-	{worker: "tidegauge", kind: "item", from: "parked", to: "observed", next: "assay", lane: "normal"},
-}
+// specExtendedRoutes is retained empty now that CONTRACT.md v1 includes
+// linked and parked revisit routes directly in contractRoutes.
+var specExtendedRoutes []routeSpec
 
 var pausableStatesStrict = map[string]bool{
 	"recorded": true,
 	"observed": true,
 	"approved": true,
+	"building": true,
+	"live":     true,
+	"parked":   true,
+	"linked":   true,
+	"merged":   true,
+	"retired":  true,
 }
 
-var pausableStatesExtended = map[string]bool{
-	"recorded": true,
-	"observed": true,
-	"approved": true,
-	"live":     true,
-	"linked":   true,
-	"parked":   true,
-}
+var pausableStatesExtended = pausableStatesStrict
 
 // SeedItem seeds an item into the in-memory Standin server.
 type SeedItem struct {

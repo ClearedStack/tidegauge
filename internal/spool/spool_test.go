@@ -106,12 +106,13 @@ func TestSpoolDropsTerminalRefusalCleanly(t *testing.T) {
 		t.Fatalf("Lease failed: %v %v", grant, err)
 	}
 
-	// Under strict CONTRACT.md v1, pausing a live item via /v1/needs_subtool is
-	// refused with 409 move_not_allowed. Spool must drop it cleanly rather than wedge.
+	// Attempting a disallowed move (live -> rejected) is refused with
+	// 409 move_not_allowed. Spool must drop it cleanly rather than wedge.
 	if _, err := q.Enqueue(Entry{
 		ItemID: grant.ID,
 		Lease:  grant.Lease,
-		Call:   CallNeedsSubtool,
+		Call:   CallComplete,
+		State:  "rejected",
 	}); err != nil {
 		t.Fatal(err)
 	}

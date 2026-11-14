@@ -27,6 +27,10 @@ func TestManifestsAndRepositoryRules(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
+	appYAML, err := os.ReadFile(filepath.Join("..", "app.yaml"))
+	if err != nil {
+		t.Fatal(err)
+	}
 
 	// 1. Module path and stdlib-only rule.
 	if !strings.Contains(string(goMod), "module github.com/ClearedStack/tidegauge\n") {
@@ -36,13 +40,43 @@ func TestManifestsAndRepositoryRules(t *testing.T) {
 		t.Fatalf("go.mod must have zero external dependencies:\n%s", goMod)
 	}
 
-	// 2. No Dockerfile allowed; ko base image must be pinned by sha256 digest.
+	// 2. No Dockerfile allowed; ko base image and app.yaml must be pinned by sha256 digest.
 	if _, err := os.Stat(filepath.Join("..", "Dockerfile")); err == nil {
 		t.Fatal("Dockerfile found; images must be built with ko, not Docker")
 	}
 	digestRE := regexp.MustCompile(`@sha256:[0-9a-f]{64}\b`)
 	if !digestRE.Match(koYAML) {
 		t.Fatalf(".ko.yaml base image is not pinned by sha256 digest:\n%s", koYAML)
+	}
+	appStr := string(appYAML)
+	for _, needle := range []string{
+		"name: tidegauge",
+		"namespace: cs-workers",
+		"image: tidegauge",
+		"replicas: 1",
+		"port: 8080",
+		"memory: 30Mi",
+	} {
+		if !strings.Contains(appStr, needle) {
+			t.Errorf("app.yaml missing %q", needle)
+		}
+	}
+	if !regexp.MustCompile(`digest: sha256:[0-9a-f]{64}\b`).Match(appYAML) {
+		t.Errorf("app.yaml digest is not sha256:<64hex>:\n%s", appYAML)
+	}
+	allowedAppKeys := map[string]bool{
+		"name": true, "namespace": true, "image": true, "digest": true,
+		"replicas": true, "port": true, "memory": true, "allowFrom": true,
+	}
+	for _, line := range strings.Split(appStr, "\n") {
+		trimmed := strings.TrimSpace(line)
+		if trimmed == "" || strings.HasPrefix(trimmed, "#") || strings.HasPrefix(trimmed, "-") {
+			continue
+		}
+		key, _, ok := strings.Cut(trimmed, ":")
+		if ok && !allowedAppKeys[strings.TrimSpace(key)] {
+			t.Errorf("app.yaml contains key %q rejected by Shipkeeper", key)
+		}
 	}
 
 	// 3. Deployment posture in cs-workers.

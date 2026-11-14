@@ -59,15 +59,15 @@ go vet ./...
 go test -race ./...
 ```
 
-The test suite requires Go 1.24 or later and zero external packages, network access or cluster credentials. [`internal/muster/contract_test.go`](internal/muster/contract_test.go) replays all 52 saved examples from `ClearedStack/muster`'s `contract/v1/examples/` directory (vendored verbatim under [`testdata/contract/v1/examples/`](testdata/contract/v1/examples)).
+The test suite requires Go 1.24 or later and zero external packages, network access or cluster credentials. [`internal/muster/contract_test.go`](internal/muster/contract_test.go) replays all 56 saved examples from `ClearedStack/muster`'s `contract/v1/examples/` directory (vendored verbatim under [`testdata/contract/v1/examples/`](testdata/contract/v1/examples)).
 
 ## What Tidegauge needs from other components
 
-Tidegauge does not invent endpoints, fields or workarounds outside Muster contract v1. Three upstream items are needed for every transition in [`SPEC.md`](SPEC.md) to run in production:
+Tidegauge does not invent endpoints, fields or workarounds outside Muster contract v1. Before cluster rollout:
 
-1. **Pausing `live`, `linked` and `parked` items in Muster (`ClearedStack/muster`):** `CONTRACT.md` ("Item states and moves") currently allows `-> needs_subtool` only from `recorded`, `observed` and `approved`. When an upstream regulatory feed changes layout on a `live` item, Tidegauge calls `POST /v1/needs_subtool` as required; Muster currently refuses that move with `409 move_not_allowed` until `live`, `linked` and `parked` are added to Muster's pausable states.
-2. **Queue steps for `linked` and `parked` revisits (`ClearedStack/muster`):** `CONTRACT.md` ("Queue steps") currently schedules 7-day Tidegauge checks only for `live` items (`Chartroom: building -> live`, `Tidegauge: live -> live|building|retired`). Scheduling `linked` and `parked` revisits requires Muster queue rows for `linked -> linked`, `linked -> observed`, `parked -> parked` and `parked -> observed` (plus queuing Tidegauge after `Chartroom` lists a `linked` item and after `Countersign`/`Shakedown` parks an item).
-3. **Shared `results` conventions (`Waybill`, `Chartroom`, `Countersign`, `Shakedown`) and release digest stamping (`Keelworks`):** Tidegauge reads watched URLs and rule versions from `results.chartroom` (`live_url`, `link.url`, `provenance.links`, `rule_version`), `results.waybill` (`sources`, `targets`, `rule_version`) and `results.countersign`/`results.shakedown` (`blocker_url`, `watch_url`). Before applying [`deploy/tidegauge.yaml`](deploy/tidegauge.yaml), Keelworks must stamp the built `lazarette.clearedstack.svc.cluster.local:5000/tidegauge@sha256:...` image digest.
+1. **Muster Contract v1 alignment (`ClearedStack/muster`):** Tidegauge speaks the 56-example Muster contract v1 suite, including `POST /v1/needs_subtool` pauses from `live`, `linked` and `parked` items and 7-day `backfill` revisit queue steps for `live`, `linked` and `parked` items. Deploy the updated `ClearedStack/muster` revision alongside or before Tidegauge so `linked` and `parked` revisits are scheduled in production.
+2. **Shared `results` conventions (`Waybill`, `Chartroom`, `Countersign`, `Shakedown`):** Tidegauge reads watched URLs and rule versions from `results.chartroom` (`live_url`, `link.url`, `provenance.links`, `rule_version`), `results.waybill` (`sources` as either URL strings or `{watcher, url, citation}` objects, `targets`, `rule_version`) and `results.countersign`/`results.shakedown` (`blocker_url`, `watch_url`).
+3. **Release digest stamping (`Keelworks` and `Shipkeeper`):** Before reconciling [`app.yaml`](app.yaml) or applying [`deploy/tidegauge.yaml`](deploy/tidegauge.yaml), Keelworks stamps the signed `lazarette.clearedstack.svc.cluster.local:5000/tidegauge@sha256:...` image digest.
 
 ## In this repository
 
@@ -76,10 +76,11 @@ Tidegauge does not invent endpoints, fields or workarounds outside Muster contra
 | [`SPEC.md`](SPEC.md) | The specification: what Tidegauge does, its interfaces, how it fails and how it is kept safe. |
 | [`PROMPT.md`](PROMPT.md) | The prompt to start a build session with. It says what to build and the rules to build it under. |
 | [`component.json`](component.json) | This component's entry in the ClearedStack naming registry. |
+| [`app.yaml`](app.yaml) | Desired workload state reconciled by Shipkeeper (`cs-workers`, `30Mi`). |
 | [`.ko.yaml`](.ko.yaml) | Reproducible `ko` image build configuration pinned to `distroless/static-debian12:nonroot` by digest. |
 | [`deploy/`](deploy) | Hardened `cs-workers` `ServiceAccount`, `Deployment` and default-deny `NetworkPolicy` manifests. |
 | [`cmd/tidegauge/`](cmd/tidegauge) | The command-line entrypoint (`tidegauge work` and the five saved-file watcher subcommands). |
-| [`internal/muster/`](internal/muster) | Strict Muster contract v1 HTTP client, stand-in server and 52-example contract replay tests. |
+| [`internal/muster/`](internal/muster) | Strict Muster contract v1 HTTP client, stand-in server and 56-example contract replay tests. |
 | [`internal/spool/`](internal/spool) | Atomic `/var/spool/cs` outbox and scratch directory manager. |
 | [`internal/fetch/`](internal/fetch) | SSRF-safe public HTTPS fetcher with `If-None-Match` ETag support and disk spilling. |
 | [`internal/worker/`](internal/worker) | Continuous lease, heartbeat, watcher dispatch and state-transition loop. |

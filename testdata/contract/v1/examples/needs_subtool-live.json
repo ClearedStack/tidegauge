@@ -1,0 +1,38 @@
+{
+  "about": "Tidegauge encounters an unfamiliar source format while checking a live item and pauses it.",
+  "given": {
+    "items": [
+      {
+        "id": "PA-0001",
+        "state": "live",
+        "lane": "normal"
+      }
+    ],
+    "calls": [
+      {
+        "as": "tidegauge",
+        "method": "POST",
+        "path": "/v1/lease",
+        "body": {
+          "contract": "v1"
+        }
+      }
+    ]
+  },
+  "request": {
+    "as": "tidegauge",
+    "method": "POST",
+    "path": "/v1/needs_subtool",
+    "body": {
+      "contract": "v1",
+      "lease": "PA-0001.1.1"
+    }
+  },
+  "expect": {
+    "status": 200,
+    "body": {
+      "id": "PA-0001",
+      "state": "needs_subtool"
+    }
+  }
+}

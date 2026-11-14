@@ -37,8 +37,8 @@ When a deterministic diff confirms a meaningful change, Tidegauge stages the fin
 | --- | --- | --- | --- |
 | `live` | `building` | `urgent` | Governing regulation shifted or live tool rule version drifted; preempts normal/backfill work for an updated release. |
 | `live` | `retired` | `urgent` | Underlying statutory rule or clause was repealed or superseded. |
-| `parked` | `observed` | `normal` | Previously named blocker (e.g., pending rule or missing public data) cleared on scheduled revisit. |
-| `linked` | `observed` | `normal` | External free tool went offline, added a paywall, or introduced tracking scripts; returned for clean-room build decision. |
+| `parked` | `observed` | `urgent` | Previously named blocker (e.g., pending rule or missing public data) cleared on scheduled revisit. |
+| `linked` | `observed` | `urgent` | External free tool went offline, added a paywall, or introduced tracking scripts; returned for clean-room build decision. |
 
 ## Sub-Tools & Failure Modes
 
