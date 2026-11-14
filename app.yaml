@@ -1,0 +1,9 @@
+# Shipkeeper application descriptor for Tidegauge.
+# Keelworks stamps the built Lazarette image digest before reconciliation.
+name: tidegauge
+namespace: cs-workers
+image: tidegauge
+digest: sha256:0000000000000000000000000000000000000000000000000000000000000000
+replicas: 1
+port: 8080
+memory: 30Mi

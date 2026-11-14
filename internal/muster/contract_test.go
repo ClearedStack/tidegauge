@@ -111,15 +111,15 @@ func canClientEmit(r savedRequest) bool {
 }
 
 // TestReplayContractExamples replays every single saved example in
-// contract/v1/examples/ from ClearedStack/muster (all 52 JSON files, zero
+// contract/v1/examples/ from ClearedStack/muster (all 56 JSON files, zero
 // skipped).
 func TestReplayContractExamples(t *testing.T) {
 	paths, err := filepath.Glob(filepath.Join(contractExamplesDir, "*.json"))
 	if err != nil {
 		t.Fatal(err)
 	}
-	if len(paths) < 52 {
-		t.Fatalf("found %d contract examples in %s, want at least 52", len(paths), contractExamplesDir)
+	if len(paths) != 56 {
+		t.Fatalf("found %d contract examples in %s, want 56", len(paths), contractExamplesDir)
 	}
 
 	replayed := 0
@@ -491,6 +491,8 @@ func assertSameJSON(t *testing.T, gotRaw, wantRaw []byte) {
 func TestStandinEndToEndWorkerStories(t *testing.T) {
 	stories := []string{
 		"complete.json",
+		"complete-revisit-linked.json",
+		"complete-revisit-parked.json",
 		"fail-parse.json",
 		"fail-timeout.json",
 		"heartbeat.json",
@@ -500,6 +502,8 @@ func TestStandinEndToEndWorkerStories(t *testing.T) {
 		"lease-rebuild.json",
 		"lease.json",
 		"needs_subtool.json",
+		"needs_subtool-building.json",
+		"needs_subtool-live.json",
 		"refused-409-lease_not_held.json",
 		"refused-409-move_not_allowed.json",
 		"refused-500-bad_record.json",

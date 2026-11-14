@@ -191,7 +191,6 @@ func TestWorkerLinkedParkedErrorsAndHeartbeats(t *testing.T) {
 	defer upstream.Close()
 
 	standin := muster.NewStandin(nil)
-	standin.SetAllowExtendedTidegaugeMoves(true)
 
 	var heartbeats atomic.Int32
 	musterSrv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -299,5 +298,97 @@ func TestWorkerLinkedParkedErrorsAndHeartbeats(t *testing.T) {
 	}
 	if st, _, _ := standin.InspectItem("PA-0013"); st != "needs_subtool" {
 		t.Fatalf("PA-0013 state = %q, want needs_subtool", st)
+	}
+}
+
+func TestWorkerWaybillStructuredSources(t *testing.T) {
+	var threshold atomic.Int32
+	threshold.Store(10000)
+
+	feedSrv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		switch r.URL.Path {
+		case "/ecfr/part-31.xml":
+			if threshold.Load() == 10000 {
+				_, _ = w.Write([]byte(`<DIV5 N="31" TYPE="PART"><HEAD>PART 31 - CONTRACT COST PRINCIPLES</HEAD><DIV8 N="31.205" TYPE="SECTION"><HEAD>31.205 Selected costs.</HEAD><P>Cap is $10,000.</P></DIV8></DIV5>`))
+			} else {
+				_, _ = w.Write([]byte(`<DIV5 N="31" TYPE="PART"><HEAD>PART 31 - CONTRACT COST PRINCIPLES</HEAD><DIV8 N="31.205" TYPE="SECTION"><HEAD>31.205 Selected costs.</HEAD><P>Cap is $25,000.</P></DIV8></DIV5>`))
+			}
+		case "/tools/cost-cap/manifest.json":
+			_, _ = w.Write([]byte(`{"slug":"cost-cap","status":"live","healthy":true,"rule_version":"48-CFR-31.205@2031-02-01"}`))
+		default:
+			w.WriteHeader(http.StatusNotFound)
+		}
+	}))
+	defer feedSrv.Close()
+
+	// Exact Waybill unified results.waybill shape with structured WatchedSource objects
+	// plus human-facing provenance links and Chartroom live_url without rule_version.
+	waybillRes, _ := json.Marshal(map[string]any{
+		"slug":         "cost-cap",
+		"rule_version": "48-CFR-31.205@2031-02-01",
+		"entry": map[string]any{
+			"title":   "Cost Cap Helper",
+			"summary": "Computes synthetic FAR 31.205 cost caps.",
+		},
+		"provenance": map[string]any{
+			"note":  "Built from 48 CFR 31.205.",
+			"links": []string{"https://www.acquisition.gov/far/part-31"},
+		},
+		"sources": []map[string]string{
+			{
+				"watcher":  "ecfr",
+				"url":      feedSrv.URL + "/ecfr/part-31.xml",
+				"citation": "48 CFR 31.205",
+			},
+		},
+	})
+	chartroomRes, _ := json.Marshal(map[string]any{
+		"live_url": feedSrv.URL + "/tools/cost-cap/manifest.json",
+	})
+
+	standin := muster.NewStandin([]muster.SeedItem{
+		{
+			ID:    "PA-0042",
+			State: "live",
+			Lane:  "backfill",
+			Results: map[string]json.RawMessage{
+				"waybill":   waybillRes,
+				"chartroom": chartroomRes,
+			},
+		},
+	})
+	musterSrv := httptest.NewServer(standin)
+	defer musterSrv.Close()
+
+	client, err := muster.NewClient(musterSrv.URL, muster.StaticTokenSource(standin.TokenFor("tidegauge")), musterSrv.Client())
+	if err != nil {
+		t.Fatal(err)
+	}
+	sp, err := spool.New(t.TempDir())
+	if err != nil {
+		t.Fatal(err)
+	}
+	w := New(Config{
+		Muster:  client,
+		Spool:   sp,
+		Fetcher: fetch.New(fetch.Options{ScratchDir: sp.TempDir(), HTTPClient: feedSrv.Client(), AllowPrivateForTest: true}),
+	})
+
+	// 1. Initial baseline succeeds and stays live (verifies slug + rule_version came from results.waybill).
+	if worked, err := w.StepOnce(context.Background()); err != nil || !worked {
+		t.Fatalf("initial StepOnce: worked=%v err=%v", worked, err)
+	}
+	if st, _, _ := standin.InspectItem("PA-0042"); st != "live" {
+		t.Fatalf("after baseline: state = %q, want live", st)
+	}
+
+	// 2. After 7 days and eCFR threshold drift, item moves live -> building.
+	standin.Advance(168 * time.Hour)
+	threshold.Store(25000)
+	if worked, err := w.StepOnce(context.Background()); err != nil || !worked {
+		t.Fatalf("drift StepOnce: worked=%v err=%v", worked, err)
+	}
+	if st, _, _ := standin.InspectItem("PA-0042"); st != "building" {
+		t.Fatalf("after structured Waybill source drift: state = %q, want building", st)
 	}
 }

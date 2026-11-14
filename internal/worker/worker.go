@@ -670,14 +670,14 @@ func extractTargetsAndBaseline(grant *muster.Grant) ([]watchTarget, map[string]T
 			continue
 		}
 		var doc struct {
-			Slug        string           `json:"slug"`
-			RuleVersion string           `json:"rule_version"`
-			LiveURL     string           `json:"live_url"`
-			WatchURL    string           `json:"watch_url"`
-			BlockerURL  string           `json:"blocker_url"`
-			LinkedURL   string           `json:"linked_url"`
-			Sources     []string         `json:"sources"`
-			Targets     []explicitTarget `json:"targets"`
+			Slug        string            `json:"slug"`
+			RuleVersion string            `json:"rule_version"`
+			LiveURL     string            `json:"live_url"`
+			WatchURL    string            `json:"watch_url"`
+			BlockerURL  string            `json:"blocker_url"`
+			LinkedURL   string            `json:"linked_url"`
+			Sources     []json.RawMessage `json:"sources"`
+			Targets     []explicitTarget  `json:"targets"`
 		}
 		if json.Unmarshal(raw, &doc) != nil {
 			continue
@@ -691,8 +691,29 @@ func extractTargetsAndBaseline(grant *muster.Grant) ([]watchTarget, map[string]T
 		for _, t := range doc.Targets {
 			addURL(t.Tool, t.URL)
 		}
-		for _, src := range doc.Sources {
-			addURL("", src)
+		for _, sraw := range doc.Sources {
+			var s string
+			if json.Unmarshal(sraw, &s) == nil && s != "" {
+				addURL("", s)
+				continue
+			}
+			var obj struct {
+				Watcher string `json:"watcher"`
+				Tool    string `json:"tool"`
+				URL     string `json:"url"`
+				Href    string `json:"href"`
+			}
+			if json.Unmarshal(sraw, &obj) == nil {
+				toolHint := obj.Tool
+				if toolHint == "" {
+					toolHint = obj.Watcher
+				}
+				if obj.URL != "" {
+					addURL(toolHint, obj.URL)
+				} else if obj.Href != "" {
+					addURL(toolHint, obj.Href)
+				}
+			}
 		}
 		if doc.WatchURL != "" {
 			addURL("", doc.WatchURL)

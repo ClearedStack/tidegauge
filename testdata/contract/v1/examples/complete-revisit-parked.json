@@ -1,0 +1,44 @@
+{
+  "about": "Tidegauge checks a parked item, finds the blocking condition cleared, and returns the item to observed for Assay.",
+  "given": {
+    "items": [
+      {
+        "id": "PA-0001",
+        "state": "parked",
+        "lane": "backfill",
+        "next": "tidegauge"
+      }
+    ],
+    "calls": [
+      {
+        "as": "tidegauge",
+        "method": "POST",
+        "path": "/v1/lease",
+        "body": {
+          "contract": "v1"
+        }
+      }
+    ]
+  },
+  "request": {
+    "as": "tidegauge",
+    "method": "POST",
+    "path": "/v1/complete",
+    "body": {
+      "contract": "v1",
+      "lease": "PA-0001.1.1",
+      "state": "observed",
+      "result": {
+        "revisit": "blocker_cleared"
+      }
+    }
+  },
+  "expect": {
+    "status": 200,
+    "body": {
+      "id": "PA-0001",
+      "state": "observed",
+      "next": "assay"
+    }
+  }
+}
